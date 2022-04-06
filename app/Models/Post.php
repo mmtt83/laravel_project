@@ -13,4 +13,9 @@ class Post extends Model
     public function user(){
         return $this->belongsTo('App\Models\User');
     }
+    
+    //ategoryテーブルとのリレーション
+    public function category(){
+        return $this->belongsTo(Category::class); //talk(投稿)は必ず一つのカテゴリーに属すため
+    }
 }

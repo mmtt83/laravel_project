@@ -22,7 +22,7 @@ class PostsController extends Controller
         //全ての投稿を取得
         $posts = Post::orderBy('created_at', 'desc')->get();
         
-        return view('postslist',['posts'=>$posts]);
+        return view('posts_list',['posts'=>$posts]);
     }
 
     /**
@@ -32,7 +32,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts');
     }
 
     /**
@@ -66,7 +66,7 @@ class PostsController extends Controller
         
         //以下に登録処理を記述(Eloquentモデル)
         $posts = new Post;
-        $posts->category = $request->category;
+        $posts->category_id = $request->category_id;
         $posts->post_title = $request->post_title;
         $posts->post_body = $request->post_body;
         $posts->select_time = $request->select_time;
@@ -74,7 +74,7 @@ class PostsController extends Controller
         $posts->user_id = Auth::id(); //ここでログインしているユーザーidを登録する
         $posts->save();
         
-        return redirect('/');
+        return redirect('/posts');
         
     }
 
@@ -89,7 +89,7 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
-        return view('postsdetail',compact('post'));
+        return view('posts_detail',compact('post'));
     }
 
     /**
@@ -101,7 +101,7 @@ class PostsController extends Controller
     //更新画面
     public function edit(Post $post)
     {
-        return view('postsedit', ['post'=>$post]);
+        return view('posts_edit', ['post'=>$post]);
     }
 
     /**
@@ -130,16 +130,17 @@ class PostsController extends Controller
         }else{
             $filename = "";
         }
+        
         //Eloquentモデル
         $posts = Post::find($request->id);
-        $posts->category = $request->category;
+        $posts->category_id = $request->category_id;
         $posts->post_title = $request->post_title;
         $posts->post_body = $request->post_body;
         $posts->select_time = $request->select_time;
         $posts->cover_img = $filename;
         $posts->user_id = Auth::id(); //ここでログインしているユーザーidを登録する
         $posts->save();
-        return redirect('/');
+        return redirect('/posts_list');
     
     }
 
@@ -154,42 +155,5 @@ class PostsController extends Controller
     {
         $post->delete();
         return redirect('/');
-    }
-    
-    //画像をアップロード処理
-    public function upload(Request $request){
-        
-        //バリデーション
-        $validator = $request->validate([
-            'img' => 'required|file|image|max:2048',
-            ]);
-            
-            //画像ファイルの取得
-            $file = $request->img;
-            
-            //ログインユーザー取得
-            $user = Auth::user();
-            
-            if(!empty($file)) {
-                //ファイルの拡張子取得
-                $ext = $file->guessExtension();
-                
-                //ファイル名を生成
-                $fileName = Str::random(32).'.'.$ext;
-                
-                //画像ファイル名を任意のDBに保存
-                $user->cover_img=$fileName;
-                $user->save();
-                
-                //public/uploadフォルダを作成
-                $target_path = public_path('/upload/');
-                
-                //ファイルをpublic/uploadフォルダに移動
-                $file->move($target_path,$fileName);
-                
-            }else{
-                return redirect('/');
-            }
-            return redirect('/post');
     }
 }

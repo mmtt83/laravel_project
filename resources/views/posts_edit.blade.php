@@ -9,7 +9,11 @@
                 <div class="form-group">
                     <strong>投稿のカテゴリを選択</strong>
                     <div class="col-sm-6">
-                        <input type="text" name="category" class="form-control" value="{{$post->category}}">
+                         <select name="category_id">
+                            @foreach(\App\Models\Category::get() as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <!--投稿のタイトル-->
@@ -23,7 +27,7 @@
                 <div class="form-group">
                     <strong>投稿の本文</strong>
                     <div class="col-sm-6">
-                        <textarea type="text" name="post_body" class="form-control" value="{{$post->post_body}}"></textarea>
+                        <textarea type="text" class="form-control" name="post_body">{{$post->post_body}}</textarea>
                     </div>
                 </div>
                 <!--会話時間-->

@@ -16,10 +16,11 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('category', CategoryType::getValues())
-                ->default(CategoryType::LEARNING);
+            //$table->enum('category', CategoryType::getValues())
+                //->default(CategoryType::LEARNING);
+            $table->foreignId('category_id')->consrained('categories')->onDelete('cascade'); //外部キーcategory_idを作ります。参照先はcategoriesテーブルです。カテゴリーを削除した場合は、それに紐づくIDも削除されます。3つ目入らないことが多いけど入れるのがマナー。
             $table->string('post_title');
-            $table->string('post_body');
+            $table->text('post_body');
             $table->integer('select_time');
             $table->string('cover_img');
             $table->integer('user_id');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PostsController;
-use App\Http\Controllers\ImgController; 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,14 +16,22 @@ use App\Http\Controllers\ImgController;
 |
 */
 
+//一覧表示
+Route::get('/', function(){
+    return view('welcome');
+});
+
 //一覧表示:TOP
-Route::get('/', [PostsController::class, 'index']);
+Route::get('/posts_list', [PostsController::class, 'index']);
+
+//登録画面
+Route::get('/posts', [PostsController::class, 'create']);
 
 //登録処理 登録画面
 Route::post('/posts', [PostsController::class, 'store']);
 
 //更新画面
-Route::get('/postsedit/{post}',[PostsController::class, 'edit']);
+Route::get('/posts_edit/{post}',[PostsController::class, 'edit']);
 
 //更新処理
 Route::post('posts/update',[PostsController::class, 'update']);
@@ -31,14 +39,8 @@ Route::post('posts/update',[PostsController::class, 'update']);
 //登録を削除
 Route::delete('/post/{post}',[PostsController::class, 'destroy']);
 
-//画像アップロード画面表示
-Route::get('/post', [PostsController::class,'index']);
-
-//画像アップロード処理
-Route::post('/post/upload',[ImgController::class, 'upload']);
-
 //登録詳細画面
-Route::get('/postsdetail/{id}', [PostsController::class, 'show']);
+Route::get('/posts_detail/{id}', [PostsController::class, 'show']);
 
 
 Auth::routes();
